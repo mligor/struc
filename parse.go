@@ -155,6 +155,16 @@ func parseFieldsLocked(v reflect.Value) (Fields, error) {
 			f.Sizefrom = sizefrom
 		}
 		if tag.Sizefrom != "" {
+			re := regexp.MustCompile(`(.*)([+-]\d+)`)
+			comp := re.FindAllStringSubmatch(tag.Sizefrom, -1)
+			if len(comp) == 1 {
+				sizeDiff, convError := strconv.ParseInt(comp[0][2], 10, 32)
+				if convError == nil {
+					f.Sizediff = int(sizeDiff)
+				}
+				tag.Sizefrom = comp[0][1]
+			}
+
 			source, ok := t.FieldByName(tag.Sizefrom)
 			if !ok {
 				return nil, fmt.Errorf("struc: `sizefrom=%s` field does not exist", tag.Sizefrom)

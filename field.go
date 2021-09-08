@@ -20,6 +20,7 @@ type Field struct {
 	Order    binary.ByteOrder
 	Sizeof   []int
 	Sizefrom []int
+	Sizediff int
 	Fields   Fields
 	kind     reflect.Kind
 }

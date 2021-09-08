@@ -72,7 +72,7 @@ func (f Fields) Pack(buf []byte, val reflect.Value, options *Options) (int, erro
 		v := val.Field(i)
 		length := field.Len
 		if field.Sizefrom != nil {
-			length = f.sizefrom(val, field.Sizefrom)
+			length = f.sizefrom(val, field.Sizefrom) + field.Sizediff
 		}
 		if length <= 0 && field.Slice {
 			length = v.Len()
@@ -115,7 +115,7 @@ func (f Fields) Unpack(r io.Reader, val reflect.Value, options *Options) error {
 		v := val.Field(i)
 		length := field.Len
 		if field.Sizefrom != nil {
-			length = f.sizefrom(val, field.Sizefrom)
+			length = f.sizefrom(val, field.Sizefrom) + field.Sizediff
 		}
 		if v.Kind() == reflect.Ptr && !v.Elem().IsValid() {
 			v.Set(reflect.New(v.Type().Elem()))
